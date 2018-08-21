@@ -45,5 +45,6 @@ public class inputHandlerClass {
     }
   }
 }
+```
 
 And, it's simple as that, really.
