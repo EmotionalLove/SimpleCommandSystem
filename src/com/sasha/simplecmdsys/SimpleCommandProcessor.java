@@ -3,36 +3,36 @@ package com.sasha.simplecmdsys;
 import com.sasha.simplecmdsys.exception.InvalidInputException;
 import com.sasha.simplecmdsys.exception.SimpleCommandException;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class SimpleCommandProcessor {
 
     private String commandPrefix;
-    private ArrayList<SimpleCommand> commandRegistry;
-
+    private LinkedHashMap<Class<? extends SimpleCommand>, Object> commandRegistry;
+                              /*class*/       /*instance*/
     public SimpleCommandProcessor(String commandPrefix) {
         this.commandPrefix = commandPrefix;
-        this.commandRegistry = new ArrayList<>();
+        this.commandRegistry = new LinkedHashMap<>();
     }
 
     public String getCommandPrefix() {
         return commandPrefix;
     }
 
-    public void register(SimpleCommand command) {
-        this.commandRegistry.add(command);
+    public void register(Class<? extends SimpleCommand> commandClass) throws IllegalAccessException, InstantiationException {
+        this.commandRegistry.put(commandClass, commandClass.newInstance());
     }
 
-    public void deregister(SimpleCommand command) {
+/*    public void deregister(SimpleCommand command) {
         for (int i = 0; i < this.commandRegistry.size(); i++) {
-            if (this.commandRegistry.get(i).getCommandName().equals(command.getCommandName())) {
+            if (this.commandRegistry.get(i)getCommandName().equals(command.getCommandName())) {
                 this.commandRegistry.remove(i);
                 break;
             }
         }
     }
-
-    public ArrayList<SimpleCommand> getCommandRegistry() {
+temp disabled todo needs reewrite*/
+    public LinkedHashMap<Class<? extends SimpleCommand>, Object> getCommandRegistry() {
         return commandRegistry;
     }
 
@@ -41,7 +41,8 @@ public class SimpleCommandProcessor {
      */
     public void processCommand(String input) {
         if (!input.startsWith(commandPrefix)) throw new InvalidInputException("The input doesn't begin with the command prefix '" + commandPrefix + "'");
-        commandRegistry.forEach(command -> {
+        commandRegistry.forEach((clazz, commandObj) -> {
+            SimpleCommand command = (SimpleCommand) commandObj;
             if (input.split(" ")[0].equalsIgnoreCase(this.commandPrefix + command.getCommandName())) {
                 command.setArguments(input, this);
                 try {
