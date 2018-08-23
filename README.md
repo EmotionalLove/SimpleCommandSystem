@@ -28,7 +28,7 @@ public class Main {
     public static SimpleCommandProcessor COMMAND_PROCESSOR;
     public static void main(String[] args) {
       COMMAND_PROCESSOR = new SimpleCommandProcessor("/"); //whatever you want your command prefix to be, put it there.
-      COMMAND_PROCESSOR.register(new TestCommand());
+      COMMAND_PROCESSOR.register(TestCommand.class);
     }
 }
 ```
