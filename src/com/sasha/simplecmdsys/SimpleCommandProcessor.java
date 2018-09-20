@@ -48,7 +48,9 @@ temp disabled todo needs reewrite*/
                 try {
                     command.onCommand();
                 }catch(Exception ee) {
-                    throw new SimpleCommandException("A severe error occurred whilst executing \"" + commandPrefix + command.getCommandName() + "\"");
+                    SimpleCommandException ex = new SimpleCommandException("A severe error occurred whilst executing \"" + commandPrefix + command.getCommandName() + "\"");
+                    ex.setStackTrace(ee.getStackTrace());
+                    throw ex;
                 }
             }
         });
