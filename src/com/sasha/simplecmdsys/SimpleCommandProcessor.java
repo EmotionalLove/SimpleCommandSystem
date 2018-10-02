@@ -40,7 +40,7 @@ temp disabled todo needs reewrite*/
      * Before feeding input into this method make sure it begins with the command prefix
      */
     public void processCommand(String input) {
-        if (!input.startsWith(commandPrefix)) throw new InvalidInputException("The input doesn't begin with the command prefix '" + commandPrefix + "'");
+        if (!input.startsWith(commandPrefix)) throw new InvalidInputException("The input doesn't begin with the command prefix '" + commandPrefix + "'", "");
         commandRegistry.forEach((clazz, commandObj) -> {
             SimpleCommand command = (SimpleCommand) commandObj;
             if (input.split(" ")[0].equalsIgnoreCase(this.commandPrefix + command.getCommandName())) {
@@ -48,7 +48,8 @@ temp disabled todo needs reewrite*/
                 try {
                     command.onCommand();
                 }catch(Exception ee) {
-                    SimpleCommandException ex = new SimpleCommandException("A severe error occurred whilst executing \"" + commandPrefix + command.getCommandName() + "\"");
+                    SimpleCommandException ex = new SimpleCommandException("An uncaught %error occurred whilst executing \"".replace("%error", ee.getClass().getName()) + commandPrefix + command.getCommandName() + "\"",
+                            ee.getMessage());
                     ex.setStackTrace(ee.getStackTrace());
                     throw ex;
                 }
