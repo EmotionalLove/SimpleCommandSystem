@@ -6,10 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class SimpleCommand {
-    private String commandName;
+    private Pattern commandName;
     private String[] commandArgs;
 
-    public SimpleCommand(String commandName){
+    public SimpleCommand(Pattern commandName){
         this.commandName = commandName;
     }
 
@@ -18,7 +18,7 @@ public abstract class SimpleCommand {
             this.commandArgs = null;
             return;
         }
-        String updatedMessage = theMessage.replace(commandProcessor.getCommandPrefix() + this.commandName + " ", ""); // i dont want the actual '-command' to be in the array
+        String updatedMessage = theMessage.replace(commandProcessor.getCommandPrefix() + this.commandName.toString() + " ", ""); // i dont want the actual '-command' to be in the array
         List<String> list = new ArrayList<>();
         Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(updatedMessage);
         while (m.find()) {
@@ -35,7 +35,7 @@ public abstract class SimpleCommand {
         return commandArgs;
     }
 
-    public String getCommandName() {
+    public Pattern getCommandName() {
         return commandName;
     }
 

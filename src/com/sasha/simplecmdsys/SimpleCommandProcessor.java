@@ -43,12 +43,12 @@ temp disabled todo needs reewrite*/
         if (!input.startsWith(commandPrefix)) throw new InvalidInputException("The input doesn't begin with the command prefix '" + commandPrefix + "'", "");
         commandRegistry.forEach((clazz, commandObj) -> {
             SimpleCommand command = (SimpleCommand) commandObj;
-            if (input.split(" ")[0].equalsIgnoreCase(this.commandPrefix + command.getCommandName())) {
+            if (input.split(" ")[0].replace(commandPrefix, "").toLowerCase().matches(command.getCommandName().pattern().toLowerCase())) {
                 command.setArguments(input, this);
                 try {
                     command.onCommand();
                 }catch(Exception ee) {
-                    SimpleCommandException ex = new SimpleCommandException("An uncaught %error occurred whilst executing \"".replace("%error", ee.getClass().getName()) + commandPrefix + command.getCommandName() + "\"",
+                    SimpleCommandException ex = new SimpleCommandException("An uncaught %error occurred whilst executing \"".replace("%error", ee.getClass().getName()) + commandPrefix + command.getCommandName().toString() + "\"",
                             ee.getMessage());
                     ex.setStackTrace(ee.getStackTrace());
                     throw ex;
